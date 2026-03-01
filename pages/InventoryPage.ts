@@ -1,11 +1,7 @@
 import { Page } from "@playwright/test";
 
 export class InventoryPage {
-    static dashboardPage(page: Page): any {
-      throw new Error('Method not implemented.');
-    }
-    private page: Page; 
-
+    private page: Page;
     readonly inventoryMenu = "//span[contains(text(),'Kho hàng')]";
     readonly dashboard ="https://hkd-dev.sapocorp.vn/admin/dashboard";
 
@@ -14,10 +10,11 @@ export class InventoryPage {
     }
 
     async gotoDashboard() {
-        await this.page.goto(this.dashboard);
+        await this.page.waitForSelector(this.dashboard);
     }
 
     async openInventoryMenu() {
         await this.page.click(this.inventoryMenu);
     }
 }
+

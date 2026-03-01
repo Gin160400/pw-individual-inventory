@@ -11,11 +11,7 @@ test('Login successfully', async({page}) =>{
   await loginPage.login(loginData.username, loginData.password);
   await loginPage.gotoIndividualSite();
 
-  const [DashboardPage] = await Promise.all([
-    page.context().waitForEvent('page'), InventoryPage.dashboardPage(page)
-  ]);
-
-  await DashboardPage.waitForLoadState();
+  const DashboardPage = await loginPage.gotoIndividualSite();
 
   const inventoryPage = new InventoryPage(DashboardPage);
   await inventoryPage.openInventoryMenu();

@@ -28,6 +28,13 @@ export class LoginPage {
     }
 
     async gotoIndividualSite(){
-        await this.page.click(this.individualSite);
-    }
-}
+
+        const [DashboardPage] = await Promise.all([
+        this.page.context().waitForEvent('page'),
+        this.page.click(this.individualSite)
+    ]);
+
+    await DashboardPage.waitForLoadState();
+
+    return DashboardPage;
+    }}
