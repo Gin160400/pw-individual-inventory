@@ -1,18 +1,22 @@
 import { test, expect } from '@playwright/test';
+import { loginData } from '../test-data/login.data';
+import { LoginPage } from '../pages/LoginPage';
+import { log } from 'node:console';
+import { InventoryPage } from '../pages/InventoryPage';
+import { isContext } from 'node:vm';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test('Login successfully', async({page}) =>{
+  const loginPage = new LoginPage(page);
+  await loginPage.gotoLoginPage();
+  await loginPage.login(loginData.username, loginData.password);
+  await loginPage.gotoIndividualSite();
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+  const [DashboardPage] = await Promise.all([
+    page.context().waitForEvent('page'), InventoryPage.dashboardPage(page)
+  ]);
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+  await DashboardPage.waitForLoadState();
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
-});
+  const inventoryPage = new InventoryPage(DashboardPage);
+  await inventoryPage.openInventoryMenu();
+})
